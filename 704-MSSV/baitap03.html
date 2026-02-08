@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 3 - Guessing Game | 704-MSSV</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">704-MSSV</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Trang Chủ</a></li>
+        <li><a href="baitap01.html">Bài 1</a></li>
+        <li><a href="baitap02.html">Bài 2</a></li>
+        <li><a href="baitap03.html" class="active">Bài 3</a></li>
+        <li><a href="about.html">Giới Thiệu</a></li>
+        <li><a href="contact.html">Liên Hệ</a></li>
+        <li><a href="https://classroom.google.com/c/ODM1ODYyNTM4MTAy/a/ODI1MzAxMjA2MTMz/details" target="_blank">Bài 20</a></li>
+        <li><a href="https://phamanqpidxj.github.io/B-i-21/index.html" target="_blank">Bài 21</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1 class="page-title">Bài 3 - Game Đoán Số</h1>
+    <p class="page-subtitle">Đoán số ngẫu nhiên từ 1-100 với hiệu ứng pháo hoa khi đoán đúng</p>
+
+    <div class="game-container">
+      <div class="game-box">
+        <h2>Đoán Số Bí Mật</h2>
+        <p class="game-desc">Tôi đang nghĩ một số từ 1 đến 100. Bạn có thể đoán được không?</p>
+
+        <div class="game-input-group">
+          <input type="number" id="guess-input" min="1" max="100" placeholder="1-100" autocomplete="off">
+          <button id="guess-btn">Đoán</button>
+        </div>
+
+        <p id="game-message" class="game-message">Hãy đoán một số từ 1 đến 100!</p>
+
+        <div class="game-stats">
+          <div>Số lần đoán: <span id="attempts-count">0</span></div>
+        </div>
+
+        <button id="restart-btn" class="btn-restart" style="display:none;">Chơi Lại</button>
+
+        <div class="game-history" id="guess-history"></div>
+      </div>
+    </div>
+
+    <!-- GIẢI THÍCH LOGIC -->
+    <div class="explanation">
+      <h3>Giải thích logic tư duy</h3>
+
+      <h4>1. Cách tạo số ngẫu nhiên</h4>
+      <ul>
+        <li><code>Math.random()</code> trả về số thực ngẫu nhiên trong khoảng [0, 1) (bao gồm 0, không bao gồm 1)</li>
+        <li><code>Math.random() * 100</code> → số thực trong [0, 100)</li>
+        <li><code>Math.floor(Math.random() * 100)</code> → số nguyên trong [0, 99]</li>
+        <li><code>Math.floor(Math.random() * 100) + 1</code> → số nguyên trong [1, 100]</li>
+        <li>Công thức tổng quát: <code>Math.floor(Math.random() * (max - min + 1)) + min</code></li>
+      </ul>
+
+      <h4>2. Xử lý nhập để tránh lỗi</h4>
+      <ul>
+        <li><strong>Input rỗng:</strong> Kiểm tra <code>value.trim() === ''</code> trước khi xử lý</li>
+        <li><strong>Không phải số:</strong> Sử dụng <code>parseInt(value, 10)</code> và kiểm tra <code>isNaN(guess)</code></li>
+        <li><strong>Ngoài phạm vi:</strong> Kiểm tra <code>guess &lt; 1 || guess &gt; 100</code></li>
+        <li><strong>Số đã đoán:</strong> Lưu mảng <code>guessedNumbers[]</code> và kiểm tra <code>includes(guess)</code> tránh đoán lặp</li>
+        <li><strong>Game kết thúc:</strong> Flag <code>gameOver</code> + disable input/button ngăn thao tác sau khi thắng</li>
+        <li><strong>Radix parameter:</strong> <code>parseInt(value, 10)</code> chỉ rõ hệ thập phân, tránh lỗi khi input bắt đầu bằng "0"</li>
+      </ul>
+
+      <h4>3. Hiệu ứng pháo hoa CSS</h4>
+      <ul>
+        <li><strong>Particle system:</strong> Tạo nhiều phần tử div nhỏ (spark) tại vị trí ngẫu nhiên trên màn hình</li>
+        <li><strong>CSS Custom Properties:</strong> Mỗi spark có <code>--dx</code> và <code>--dy</code> riêng, xác định hướng bay bằng góc lượng giác (<code>Math.cos</code>, <code>Math.sin</code>)</li>
+        <li><strong>CSS @keyframes:</strong> Animation di chuyển spark theo hướng (--dx, --dy) và fade out</li>
+        <li><strong>Cleanup DOM:</strong> Tự động xóa container pháo hoa sau 3 giây bằng <code>setTimeout(() => container.remove(), 3000)</code> - tránh memory leak</li>
+        <li><strong>pointer-events: none:</strong> Container pháo hoa không chặn click/tương tác của user</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 704-MSSV. All rights reserved.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

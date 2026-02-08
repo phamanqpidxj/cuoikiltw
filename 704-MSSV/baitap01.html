@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 1 - Image Carousel | 704-MSSV</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">704-MSSV</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Trang Chủ</a></li>
+        <li><a href="baitap01.html" class="active">Bài 1</a></li>
+        <li><a href="baitap02.html">Bài 2</a></li>
+        <li><a href="baitap03.html">Bài 3</a></li>
+        <li><a href="about.html">Giới Thiệu</a></li>
+        <li><a href="contact.html">Liên Hệ</a></li>
+        <li><a href="https://classroom.google.com/c/ODM1ODYyNTM4MTAy/a/ODI1MzAxMjA2MTMz/details" target="_blank">Bài 20</a></li>
+        <li><a href="https://phamanqpidxj.github.io/B-i-21/index.html" target="_blank">Bài 21</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1 class="page-title">Bài 1 - Image Carousel</h1>
+    <p class="page-subtitle">Carousel hình ảnh với CSS transition, auto-play 3 giây, next/prev và responsive</p>
+
+    <!-- CAROUSEL -->
+    <div class="carousel-wrapper">
+      <div class="carousel-track">
+        <!-- 6 hình ảnh sử dụng placeholder có màu sắc khác nhau -->
+        <img class="slide" src="https://picsum.photos/seed/slide1/800/450" alt="Slide 1">
+        <img class="slide" src="https://picsum.photos/seed/slide2/800/450" alt="Slide 2">
+        <img class="slide" src="https://picsum.photos/seed/slide3/800/450" alt="Slide 3">
+        <img class="slide" src="https://picsum.photos/seed/slide4/800/450" alt="Slide 4">
+        <img class="slide" src="https://picsum.photos/seed/slide5/800/450" alt="Slide 5">
+        <img class="slide" src="https://picsum.photos/seed/slide6/800/450" alt="Slide 6">
+      </div>
+
+      <button class="carousel-btn prev" aria-label="Previous">&#10094;</button>
+      <button class="carousel-btn next" aria-label="Next">&#10095;</button>
+
+      <div class="carousel-dots"></div>
+    </div>
+
+    <!-- GIẢI THÍCH LOGIC -->
+    <div class="explanation">
+      <h3>Giải thích logic tư duy</h3>
+
+      <h4>1. Cách xử lý index để tránh ngoài giới hạn</h4>
+      <p>Sử dụng phép toán <strong>modulo (%)</strong> để đảm bảo index luôn nằm trong phạm vi hợp lệ:</p>
+      <ul>
+        <li><code>currentIndex = ((index % totalSlides) + totalSlides) % totalSlides</code></li>
+        <li>Khi nhấn <strong>Next</strong> ở slide cuối (index = 5): <code>(5 + 1) % 6 = 0</code> → quay về slide đầu</li>
+        <li>Khi nhấn <strong>Prev</strong> ở slide đầu (index = 0): <code>(0 - 1 + 6) % 6 = 5</code> → nhảy đến slide cuối</li>
+        <li>Phép toán <code>((n % m) + m) % m</code> xử lý cả trường hợp index âm (JavaScript modulo có thể trả về số âm)</li>
+      </ul>
+
+      <h4>2. Tối ưu performance</h4>
+      <ul>
+        <li><strong>CSS Transform thay vì thay đổi layout:</strong> Sử dụng <code>transform: translateX()</code> được GPU tăng tốc, không gây reflow/repaint toàn trang</li>
+        <li><strong>will-change: transform:</strong> Báo trước cho browser chuẩn bị tối ưu composite layer</li>
+        <li><strong>CSS transition thay vì JS animation:</strong> Browser tối ưu CSS transition tốt hơn, chạy trên compositor thread riêng</li>
+        <li><strong>Pause khi hover:</strong> Dừng setInterval khi user tương tác giúp tiết kiệm CPU</li>
+        <li><strong>Event passive:</strong> Touch events sử dụng <code>{ passive: true }</code> để không block scrolling</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 704-MSSV. All rights reserved.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

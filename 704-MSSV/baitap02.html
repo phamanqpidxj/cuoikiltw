@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 2 - Todo List | 704-MSSV</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">704-MSSV</a>
+      <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Trang Chủ</a></li>
+        <li><a href="baitap01.html">Bài 1</a></li>
+        <li><a href="baitap02.html" class="active">Bài 2</a></li>
+        <li><a href="baitap03.html">Bài 3</a></li>
+        <li><a href="about.html">Giới Thiệu</a></li>
+        <li><a href="contact.html">Liên Hệ</a></li>
+        <li><a href="https://classroom.google.com/c/ODM1ODYyNTM4MTAy/a/ODI1MzAxMjA2MTMz/details" target="_blank">Bài 20</a></li>
+        <li><a href="https://phamanqpidxj.github.io/B-i-21/index.html" target="_blank">Bài 21</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1 class="page-title">Bài 2 - Danh Sách Công Việc</h1>
+    <p class="page-subtitle">Todo List với thêm/xóa/sửa, lưu LocalStorage, sử dụng CSS Grid</p>
+
+    <div class="todo-container">
+      <!-- Input thêm công việc -->
+      <div class="todo-input-group">
+        <input type="text" id="todo-input" placeholder="Nhập công việc mới..." autocomplete="off">
+        <button id="todo-add-btn">Thêm</button>
+      </div>
+
+      <!-- Bộ lọc -->
+      <div class="todo-filters">
+        <button class="active" data-filter="all">Tất cả</button>
+        <button data-filter="active">Đang làm</button>
+        <button data-filter="completed">Hoàn thành</button>
+      </div>
+
+      <!-- Danh sách todo -->
+      <div class="todo-list" id="todo-list"></div>
+    </div>
+
+    <!-- GIẢI THÍCH LOGIC -->
+    <div class="explanation">
+      <h3>Giải thích logic tư duy</h3>
+
+      <h4>1. Cách xử lý mảng state</h4>
+      <ul>
+        <li><strong>Single source of truth:</strong> Toàn bộ dữ liệu được lưu trong mảng JavaScript <code>todos = [{id, text, completed}, ...]</code></li>
+        <li><strong>ID duy nhất:</strong> Sử dụng <code>Date.now()</code> làm id, đảm bảo mỗi todo có định danh riêng biệt</li>
+        <li><strong>Flow một chiều:</strong> User Action → Cập nhật mảng state → Lưu LocalStorage → Render DOM</li>
+        <li><strong>Immutable-style operations:</strong>
+          <ul>
+            <li>Thêm: <code>todos.push({...})</code></li>
+            <li>Xóa: <code>todos = todos.filter(t => t.id !== id)</code> → tạo mảng mới, không mutate</li>
+            <li>Sửa: Tìm bằng <code>todos.find()</code> rồi cập nhật property</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>2. Render lại DOM hiệu quả</h4>
+      <ul>
+        <li><strong>Batch rendering:</strong> Render lại toàn bộ list một lần duy nhất sau mỗi thay đổi state, thay vì thao tác từng phần tử riêng lẻ</li>
+        <li><strong>innerHTML với template literals:</strong> Tạo chuỗi HTML rồi gán một lần vào container, tránh nhiều lần DOM manipulation</li>
+        <li><strong>Event delegation:</strong> Chỉ gắn 1 event listener lên container cha <code>todoList</code>, sử dụng <code>e.target.closest()</code> để xác định phần tử. Giảm số lượng listeners từ N xuống 1</li>
+        <li><strong>Filter không thay đổi state:</strong> Khi filter (All/Active/Completed), chỉ lọc mảng tạm thời khi render, mảng gốc không bị thay đổi</li>
+        <li><strong>XSS Prevention:</strong> Sử dụng <code>escapeHtml()</code> để tránh tấn công XSS khi render text từ user input</li>
+      </ul>
+
+      <h4>3. LocalStorage</h4>
+      <ul>
+        <li><strong>Serialize/Deserialize:</strong> <code>JSON.stringify()</code> để lưu và <code>JSON.parse()</code> để đọc</li>
+        <li><strong>Fallback:</strong> <code>JSON.parse(localStorage.getItem('todos')) || []</code> xử lý trường hợp lần đầu truy cập (null)</li>
+        <li><strong>Sync:</strong> Gọi <code>saveTodos()</code> ngay sau mỗi thay đổi state để đảm bảo dữ liệu luôn đồng bộ</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 704-MSSV. All rights reserved.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
